@@ -17,7 +17,6 @@ import tgBotJava.TelegramJavaBot.entity.User;
 import tgBotJava.TelegramJavaBot.entity.WeatherData;
 import tgBotJava.TelegramJavaBot.entity.WorkTime;
 import tgBotJava.TelegramJavaBot.repository.UserRepository;
-import tgBotJava.TelegramJavaBot.repository.UserRoleRepository;
 import tgBotJava.TelegramJavaBot.repository.WorkTimeRepository;
 
 import java.sql.Timestamp;

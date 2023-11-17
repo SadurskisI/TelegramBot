@@ -3,8 +3,6 @@ package tgBotJava.TelegramJavaBot.entity;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @Entity(name = "users")

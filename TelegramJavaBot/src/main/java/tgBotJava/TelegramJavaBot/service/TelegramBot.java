@@ -127,11 +127,12 @@ public class TelegramBot extends TelegramLongPollingBot {
             user.setLastName(chat.getLastName());
             user.setUserName(chat.getUserName());
             user.setRegisteredAt(new Timestamp(System.currentTimeMillis()));
-            user.setIsActive("True");
+            user.setIsActive("true");
             user.setRole("USER");
+            user.setIsBlocked("false");
 
             userRepository.save(user);
-            log.info("user saved to db " + user);
+            log.info("new user registered " + user);
         }
     }
 
@@ -142,13 +143,19 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param name   getting userName from user
      */
     private void startCommandReceived(long chatId, String name) {
-        String answer = "Hi, " + name + ", Nice to meet you!";
-        log.info("Replied to user " + name);
-        User user = userRepository.findByChatId(chatId);
-        user.setIsActive("True");
 
-        userRepository.save(user);
-        sendMessage(chatId, answer);
+        User user = userRepository.findByChatId(chatId);
+        if (user.getIsBlocked().contains("true")) {
+            String answerBlock = "Sorry, your account `" + name + "` is blocked";
+            sendMessage(chatId, answerBlock);
+        } else {
+            String answer = "Hi, " + name + ", Nice to meet you!";
+            log.info("Replied to user " + name);
+            user.setIsActive("true");
+
+            userRepository.save(user);
+            sendMessage(chatId, answer);
+        }
     }
 
     /**
@@ -158,24 +165,30 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param name   getting userName from user
      */
     private void stopCommandReceived(long chatId, String name) {
-        String answer = "Bye, " + name + "!";
-        log.info("Replied to user " + name);
 
         User user = userRepository.findByChatId(chatId);
-        user.setIsActive("False");
+        if (user.getIsActive().contains("true")) {
+            String answer = "Bye, " + name + "!";
+            log.info("Replied to user " + name);
+            user.setIsActive("false");
 
-        userRepository.save(user);
-        sendMessage(chatId, answer);
+            userRepository.save(user);
+            sendMessage(chatId, answer);
+        } else {
+            String answerStop = "You are already stopped the bot";
+            sendMessage(chatId, answerStop);
+        }
     }
 
     /**
      * Method to save user info when he started work day
      *
      * @param msg request user info
+     * @param tmpStartedAt tmp variable for Timestamp at work starting time.
      */
-    /* tmp variable for Timestamp at work starting time. */
     WorkTime workTime = new WorkTime();
     Timestamp tmpStartedAt = null;
+
     private void startWork(Message msg) {
         String answer = "Have a nice work day, " + msg.getChat().getFirstName() + "!";
         log.info(msg.getChat().getFirstName() + " started work day");
@@ -186,7 +199,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         sendMessage(msg.getChatId(), answer);
     }
-
 
 
     /**
@@ -220,6 +232,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         sendMessage(msg.getChatId(), answer);
     }
 
+
     /**
      * Method for admins statistic to see active users
      *
@@ -231,7 +244,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         if (user.getRole().equals("ADMIN")) {
             int active = userRepository.findActiveUsers();
-            String answer = "Active users count is " + active;
+            String answer = "Active users count is: " + active;
             log.info(msg.getChat().getFirstName() + " is used statistic command");
             sendMessage(msg.getChatId(), answer);
         } else {

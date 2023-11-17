@@ -23,12 +23,14 @@ public class User {
 
     private Timestamp registeredAt;
 
-    private String  isActive;
+    private String isActive;
 
     private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<UserRole> roles = new HashSet<>();
+
+    private String  isBlocked;
 
     public Set<UserRole> getRoles() {
         return roles;
@@ -100,6 +102,14 @@ public class User {
 
     public void setIsActive(String isActive) {
         this.isActive = isActive;
+    }
+
+    public String getIsBlocked() {
+        return isBlocked;
+    }
+
+    public void setIsBlocked(String isBlocked) {
+        this.isBlocked = isBlocked;
     }
 
     @Override

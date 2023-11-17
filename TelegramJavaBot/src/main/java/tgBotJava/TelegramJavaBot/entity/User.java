@@ -27,18 +27,7 @@ public class User {
 
     private String role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<UserRole> roles = new HashSet<>();
-
     private String  isBlocked;
-
-    public Set<UserRole> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<UserRole> roles) {
-        this.roles = roles;
-    }
 
     public String getRole() {
         return role;

@@ -34,8 +34,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private UserService userService;
-    @Autowired
     private UserRoleRepository userRoleRepository;
     @Autowired
     private WorkTimeRepository workTimeRepository;
@@ -226,7 +224,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         workTimeRepository.save(workTime);
         String answer = "End working day for " + msg.getChat().getFirstName() +
                 "! The weather in " + userCity + " is `" + weatherDescription +
-                "` with a temperature of " + celsiusTemp + "°C.";
+                "` with a temperature of " + celsiusTemp + "°C." +
+                " Total worked hours is " + hrsWorked +".";
         log.info(msg.getChat().getFirstName() + " ended work day");
 
         sendMessage(msg.getChatId(), answer);

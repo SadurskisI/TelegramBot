@@ -33,8 +33,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private UserRoleRepository userRoleRepository;
-    @Autowired
     private WorkTimeRepository workTimeRepository;
     final BotConfig config;
 
